@@ -22,14 +22,14 @@ func main() {
 
 	flag.Parse()
 	if *email == "" && !*whatsapp && *bruteforce == "" {
-		fmt.Println("[-] Você deve fornecer a flag --email ou a flag --whatsapp")
+		fmt.Println("[-] You must provide the --email flag or the --whatsapp flag.")
 		os.Exit(1)
 	}
 	currentTime := time.Now()
 	formattedTime := currentTime.Format("15:04:05")
 	fmt.Println("[" + formattedTime + "]")
 	if *email != "" {
-		PrintInfo(verde, "[+] Finding Email: "+*email)
+		PrintInfo(verde, "["+formattedTime+"][+] Looking for Email: "+*email)
 		findingWhatsapp(*email)
 	}
 
@@ -38,9 +38,9 @@ func main() {
 		automationWhatsapp.Run()
 	}
 	if *bruteforce != "" {
-		PrintInfo(verde, "[+] Finding Email: "+*bruteforce)
+		PrintInfo(verde, "[+] Looking for Email: "+*bruteforce)
 		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" {
-			fmt.Println("[-] Insira paypal ou meli")
+			fmt.Println("[-] Insira paypal, meli or twitter")
 			os.Exit(1)
 		}
 		if *bruteforce == "paypal" {
@@ -62,31 +62,31 @@ func findingWhatsapp(email string) {
 	verde := "\033[32m"
 	numberShow := ""
 	// Magazine Luiza
-	PrintInfo(verde, "[+] Busca na Magazine Luiza.")
+	PrintInfo(verde, "[+] Searching on MagazineLuiza.")
 	magaluPhone := cellphone.Magalu(email)
 	if magaluPhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+magaluPhone)
 	}
 	// Paypal
-	PrintInfo(verde, "[+] Busca no Paypal.")
+	PrintInfo(verde, "[+] Searching on Paypal.")
 	paypalPhone := cellphone.Paypal(email)
 	if paypalPhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+paypalPhone)
 	}
 	// PagBank
-	PrintInfo(verde, "[+] Busca no PagBank.")
+	PrintInfo(verde, "[+] Searching on PagBank.")
 	pagbankPhone := cellphone.Pagbank(email)
 	if pagbankPhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+pagbankPhone)
 	}
 	// Mercado Livre
-	PrintInfo(verde, "[+] Busca no Mercado Livre.")
+	PrintInfo(verde, "[+] Searching on MercadoLivre.")
 	mercadolivrePhone := cellphone.Mercadolivre(email)
 	if mercadolivrePhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+mercadolivrePhone)
 	}
 	// Rappi
-	PrintInfo(verde, "[+] Busca no Rappi.")
+	PrintInfo(verde, "[+] Searching on Rappi.")
 	rappiPhone := cellphone.Rappi(email)
 	if rappiPhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+rappiPhone)
@@ -99,7 +99,7 @@ func findingWhatsapp(email string) {
 		numberphoneBR[1][2] = string(magaluPhone[4])
 		numberphoneBR[1][3] = string(magaluPhone[5])
 		numberShow = showNumberPhoneBR(numberphoneBR)
-		PrintInfo(verde, "[+] Possibilidade Magalu: "+numberShow)
+		PrintInfo(verde, "[+] Magalu, Possible Combination: "+numberShow)
 		//possibleNumbers = append(possibleNumbers, numberShow)
 		numberShow = ""
 	}
@@ -127,7 +127,7 @@ func findingWhatsapp(email string) {
 			numberphoneBR[0][1] = "*"
 		}
 		numberShow = showNumberPhoneBR(numberphoneBR)
-		PrintInfo(verde, "[+] Possibilidade Paypal: "+numberShow)
+		PrintInfo(verde, "[+] Paypal, Possible Combination: "+numberShow)
 		possibleNumbers = append(possibleNumbers, numberShow)
 		numberShow = ""
 	}
@@ -150,7 +150,7 @@ func findingWhatsapp(email string) {
 			numberphoneBR[1][7] = string(pagbankPhone[len(pagbankPhone)-2])
 			numberphoneBR[1][8] = string(pagbankPhone[len(pagbankPhone)-1])
 			numberShow = showNumberPhoneBR(numberphoneBR)
-			PrintInfo(verde, "[+] Possibilidade Pagbank: "+numberShow)
+			PrintInfo(verde, "[+] Pagbank, Possible Combination: "+numberShow)
 			possibleNumbers = append(possibleNumbers, numberShow)
 			numberShow = ""
 		}
@@ -176,7 +176,7 @@ func findingWhatsapp(email string) {
 			numberphoneBR[1][7] = string(mercadolivrePhone[len(mercadolivrePhone)-2])
 			numberphoneBR[1][8] = string(mercadolivrePhone[len(mercadolivrePhone)-1])
 			numberShow = showNumberPhoneBR(numberphoneBR)
-			PrintInfo(verde, "[+] Possibilidade Mercado Livre: "+numberShow)
+			PrintInfo(verde, "[+] Meli, Possible Combination: "+numberShow)
 			possibleNumbers = append(possibleNumbers, numberShow)
 			numberShow = ""
 		}
@@ -204,7 +204,7 @@ func findingWhatsapp(email string) {
 			numberphoneBR[1][7] = string(mercadolivrePhone[len(mercadolivrePhone)-2])
 			numberphoneBR[1][8] = string(mercadolivrePhone[len(mercadolivrePhone)-1])
 			numberShow = showNumberPhoneBR(numberphoneBR)
-			PrintInfo(verde, "[+] Possibilidade Rappi: "+numberShow)
+			PrintInfo(verde, "[+] Rappi, Possible Combination: "+numberShow)
 			possibleNumbers = append(possibleNumbers, numberShow)
 			numberShow = ""
 		}
@@ -212,9 +212,9 @@ func findingWhatsapp(email string) {
 
 	if len(possibleNumbers) > 0 {
 		numberUsers := googleContactsCSV(possibleNumbers)
-		PrintInfo(verde, "[+] A lista de contatos possui \""+strconv.Itoa(numberUsers)+"\" usuários.")
+		PrintInfo(verde, "[+] The contact list has \""+strconv.Itoa(numberUsers)+"\" cellphone numbers.")
 	} else {
-		PrintInfo(vermelho, "[+] Não Foi Possível encontrar resultado para o email: "+email)
+		PrintInfo(vermelho, "[+] Unable to find result for email: "+email)
 	}
 }
 
@@ -240,7 +240,7 @@ func generateDDD_BR(ddd string, wildcardNumber string) []string {
 
 	if ddd == "**" {
 		var num int
-		fmt.Print(vermelho, "[!] O ddd para o numero não foi encontrado, tente encontrar o estado da pessoa para um melhor resultado:", "\033[0m")
+		fmt.Print(vermelho, "[!] No DDD digit was found for the number, try to find the possible state of the person, using other OSINT techniques:", "\033[0m")
 		_, err := fmt.Scan(&num)
 		if err != nil {
 			log.Fatal(err)
