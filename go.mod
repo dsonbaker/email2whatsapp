@@ -1,4 +1,4 @@
-module email2whatsapp
+module github.com/dsonbaker/email2whatsapp
 
 go 1.20
 

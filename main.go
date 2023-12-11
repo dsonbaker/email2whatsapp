@@ -1,9 +1,6 @@
 package main
 
 import (
-	"email2whatsapp/automationWhatsapp"
-	"email2whatsapp/bruteforceSite"
-	"email2whatsapp/cellphone"
 	"flag"
 	"fmt"
 	"log"
@@ -11,6 +8,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/dsonbaker/email2whatsapp/automationWhatsapp"
+	"github.com/dsonbaker/email2whatsapp/bruteforceSite"
+	"github.com/dsonbaker/email2whatsapp/cellphone"
 )
 
 func main() {
@@ -63,23 +64,33 @@ func findingWhatsapp(email string) {
 	// Magazine Luiza
 	PrintInfo(verde, "[+] Busca na Magazine Luiza.")
 	magaluPhone := cellphone.Magalu(email)
-	PrintInfo(vermelho, "[!] Found Number: "+magaluPhone)
+	if magaluPhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+magaluPhone)
+	}
 	// Paypal
 	PrintInfo(verde, "[+] Busca no Paypal.")
 	paypalPhone := cellphone.Paypal(email)
-	PrintInfo(vermelho, "[!] Found Number: "+paypalPhone)
+	if paypalPhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+paypalPhone)
+	}
 	// PagBank
 	PrintInfo(verde, "[+] Busca no PagBank.")
 	pagbankPhone := cellphone.Pagbank(email)
-	PrintInfo(vermelho, "[!] Found Number: "+pagbankPhone)
+	if pagbankPhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+pagbankPhone)
+	}
 	// Mercado Livre
 	PrintInfo(verde, "[+] Busca no Mercado Livre.")
 	mercadolivrePhone := cellphone.Mercadolivre(email)
-	PrintInfo(vermelho, "[!] Found Number: "+mercadolivrePhone)
+	if mercadolivrePhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+mercadolivrePhone)
+	}
 	// Rappi
 	PrintInfo(verde, "[+] Busca no Rappi.")
 	rappiPhone := cellphone.Rappi(email)
-	PrintInfo(vermelho, "[!] Found Number: "+mercadolivrePhone)
+	if rappiPhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+rappiPhone)
+	}
 
 	if len(magaluPhone) > 1 {
 		numberphoneBR[0][0] = string(magaluPhone[0])
