@@ -16,9 +16,9 @@ import (
 
 func main() {
 	verde := "\033[32m"
-	email := flag.String("email", "", "O email do usuário")
-	whatsapp := flag.Bool("whatsapp", false, "Modo Automação do Whatsapp")
-	bruteforce := flag.String("bruteforce", "", "O tipo de bruteforce [paypal, meli, twitter]")
+	email := flag.String("email", "", "Target email")
+	whatsapp := flag.Bool("whatsapp", false, "Whatsapp Automation Mode")
+	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter]")
 
 	flag.Parse()
 	if *email == "" && !*whatsapp && *bruteforce == "" {
