@@ -100,7 +100,7 @@ func BruteMercadoLivre() {
 				fmt.Println("[!] Bot Detected")
 				countBotsDetected++
 				if countBotsDetected >= 1 {
-					fmt.Println("[-] Aguardando verificação do Captcha. ")
+					fmt.Println("[-] Waiting for Captcha verification. ")
 					err = chromedp.Run(ctx,
 						chromedp.Sleep(1*time.Second),
 						chromedp.Evaluate(`
