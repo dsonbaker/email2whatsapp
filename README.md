@@ -6,9 +6,8 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 
 ### Demo
 - The email used has an account on PayPal and Magalu.
-
-#### O email utilizado possui uma conta no paypal e na magalu
-#### Here are some key features of email2whatsapp
+![Demo email2whatsapp](https://github.com/dsonbaker/email2whatsapp/blob/main/videos/demo_email2whatsapp1080p30fps.gif?raw=true)
+##### Here are some key features of email2whatsapp
 
 - Multiple Database Query: email2whatsapp is not limited to a single database. It consults multiple databases to ensure users get the most accurate and comprehensive results possible.
 
