@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/dsonbaker/email2whatsapp/automationWhatsapp"
 	"github.com/dsonbaker/email2whatsapp/bruteforceSite"
@@ -25,11 +24,8 @@ func main() {
 		fmt.Println("[-] You must provide the --email flag or the --whatsapp flag.")
 		os.Exit(1)
 	}
-	currentTime := time.Now()
-	formattedTime := currentTime.Format("15:04:05")
-	fmt.Println("[" + formattedTime + "]")
 	if *email != "" {
-		PrintInfo(verde, "["+formattedTime+"][+] Looking for Email: "+*email)
+		PrintInfo(verde, "[+] Looking for Email: "+*email)
 		findingWhatsapp(*email)
 	}
 
