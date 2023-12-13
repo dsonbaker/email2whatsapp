@@ -86,7 +86,7 @@ func BrutePaypal() {
 		} else {
 			fmt.Println("[!] User Exist:", PhoneNumber)
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(1 * time.Second)
 		firsAcess = false
 	}
 }
