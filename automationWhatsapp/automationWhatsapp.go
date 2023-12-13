@@ -47,7 +47,12 @@ func Run() {
 		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, `user`, chromedp.ByJSPath),
 		chromedp.Sleep(1*time.Second),
 		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, ` `, chromedp.ByJSPath),
-		chromedp.Sleep(3*time.Second),
+		chromedp.Sleep(2*time.Second),
+		chromedp.Evaluate(`document.querySelectorAll('[role=textbox]')[0].click()`, nil),
+		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, "\b", chromedp.ByJSPath),
+		chromedp.Sleep(2*time.Second),
+		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, ` `, chromedp.ByJSPath),
+		chromedp.Sleep(2*time.Second),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -69,8 +74,8 @@ func Run() {
 		return
 	}
 
-	var sleepTime = ((time.Duration(flt) + 5) * time.Second)
-	var TimeOut = ((time.Duration(flt) + 15) * time.Second)
+	var sleepTime = ((time.Duration(flt) + 35) * time.Second)
+	var TimeOut = ((time.Duration(flt) + 45) * time.Second)
 	ctx, cancel = context.WithTimeout(ctx, TimeOut)
 	defer cancel()
 	fmt.Println("[-] Estimated time:", sleepTime)
@@ -119,7 +124,7 @@ func Run() {
 		   }
 		}
 		
-		execScroll();`, nil),
+		//execScroll();`, nil),
 	)
 	if err != nil {
 		log.Fatal(err)
