@@ -18,7 +18,7 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 
 | Magalu         | Paypal         | PagBank        | Meli           | Rappi |
 |---             |---             |---             |---             |---    |
-| ( 0 1 ) 9 2 3 4 * - * * * * | ( 0 * ) 9 * * * 1 - 2 3 4 5  | ( 0 * ) 9 * * * * - 1 2 3 4 | ( * * ) 9 * * * * - 1 2 3 4 | ( * * ) 9 * * * * - 1 2 3 4 
+| (01)9234*-**** | (0*)9***1-2345 | (0*)9****-1234 | (**)9****-1234 | (**)9****-1234 
 
 - Currently in Brazil, all start with the number '9'.
 
