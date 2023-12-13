@@ -124,7 +124,7 @@ func Run() {
 		   }
 		}
 		
-		//execScroll();`, nil),
+		execScroll();`, nil),
 	)
 	if err != nil {
 		log.Fatal(err)
