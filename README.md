@@ -30,8 +30,19 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 - Instead of using paid APIs, the tutorial uses the feature of importing contacts from Google Contacts (contacts.google.com) using the same account linked to your smartphone.
 - Wait for 5-10 minutes (depending on the number of contacts) for the WhatsApp contacts list to update.
 - Use the command `email2whatsapp -whatsapp` and log in.
-- The command will generate a file named `numberphone.txt`, which corresponds to the quantity of valid phone numbers found.
+- The command will generate a folder named `./numberphone/all-numbers.txt`, which corresponds to the quantity of valid phone numbers found.
+- If you know the photo of the person who owns the email, check the folder `./numberphone/profile/`, where public photos of each number are stored.
+- If you didn't find the person's photo, try using the file `./numberphone/numbers-withoutProfile.txt` combined with the feature `email2whatsapp -bruteforce`.
 ---
-
+## Help
+- email2whatsapp -bruteforce
+    - meli
+        - Mercado Livre links the initials of the email. If they match the target email, there's a high possibility it's the WhatsApp number.
+    - paypal
+        - PayPal will only return whether the user exists or not.
+    - twitter
+        - Twitter, the initial requests can link to the email. However, after a certain number of requests, it will only return whether the user exists or not.
+> Note that all these sites have captcha verification, hence requiring human assistance for captcha resolution. Therefore, the fewer possibilities, the better the result will be.
+---
 #### Disclaimer
-Please note that responsible use of this tool is essential. It’s important to respect individuals’ privacy and rights when using such tools.
+> Please note that responsible use of this tool is essential. It’s important to respect individuals’ privacy and rights when using such tools.
