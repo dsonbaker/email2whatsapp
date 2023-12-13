@@ -54,6 +54,7 @@ func BrutePaypal() {
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#email`, chromedp.ByID),
 				chromedp.Sleep(1*time.Second),
+				chromedp.WaitNotVisible(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
 				chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
 				chromedp.Sleep((15/10)*time.Second),
 				chromedp.KeyEvent(kb.Enter),
