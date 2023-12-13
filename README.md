@@ -29,8 +29,8 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 ## Technique to detect if a WhatsApp number exists.
 - Instead of using paid APIs, the tutorial uses the feature of importing contacts from Google Contacts (contacts.google.com) using the same account linked to your smartphone.
 - Wait for 5-10 minutes (depending on the number of contacts) for the WhatsApp contacts list to update.
-- Use the command email2whatsapp -whatsapp and log in.
-- The command will generate a file named numberphone.txt, which corresponds to the quantity of valid phone numbers found.
+- Use the command `email2whatsapp -whatsapp` and log in.
+- The command will generate a file named `numberphone.txt`, which corresponds to the quantity of valid phone numbers found.
 ---
 
 #### Disclaimer
