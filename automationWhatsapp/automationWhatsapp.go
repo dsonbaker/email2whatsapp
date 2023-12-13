@@ -25,6 +25,7 @@ func Run() {
 	options := []chromedp.ExecAllocatorOption{
 		chromedp.Flag("headless", false), // set headless to false
 		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("disable-cache", true),
 	}
 	ctx, cancel = chromedp.NewExecAllocator(ctx, options...)
 	defer cancel()
