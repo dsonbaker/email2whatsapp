@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -22,7 +23,6 @@ func Run() {
 	)
 	defer cancel()
 	options := []chromedp.ExecAllocatorOption{
-		chromedp.Flag("ignore-certificate-errors", "1"),
 		chromedp.Flag("headless", false), // set headless to false
 		chromedp.Flag("disable-gpu", true),
 	}
@@ -151,7 +151,15 @@ func Run() {
 		// Acesso correto ao campo NumberPhone dentro de cada estrutura UserINFO
 		if numberPhone, ok := user["numberphone"]; ok {
 			numberPhone = strings.Split(numberPhone, " ")[1]
-			WriteToFile("numberphone.txt", numberPhone+"\n")
+			WriteToFile("all-numbers.txt", numberPhone+"\n", "./numberphone/")
+			if src, ok := user["src"]; ok {
+				if src != "" {
+					DownloadFile(src, numberPhone+".jpg", "./numberphone/profile/")
+					WriteToFile("numbers-profile.txt", numberPhone+"\n", "./numberphone/")
+				} else {
+					WriteToFile("numbers-withoutProfile.txt", numberPhone+"\n", "./numberphone/")
+				}
+			}
 			quantityUsers++
 		} else {
 			fmt.Println("Property 'numberphone' not found in JSON.")
@@ -160,7 +168,9 @@ func Run() {
 	fmt.Println("[+] Number of users:", quantityUsers)
 }
 
-func WriteToFile(filename string, data string) error {
+func WriteToFile(filename string, data string, folderName string) error {
+	os.MkdirAll(folderName, os.ModePerm)
+	filename = filepath.Join(folderName, filename)
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
