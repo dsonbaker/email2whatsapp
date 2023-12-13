@@ -72,7 +72,7 @@ func Run() {
 	var TimeOut = ((time.Duration(flt) + 15) * time.Second)
 	ctx, cancel = context.WithTimeout(ctx, TimeOut)
 	defer cancel()
-	fmt.Println("Tempo Estimado:", sleepTime)
+	fmt.Println("[-] Estimated time:", sleepTime)
 	//document.querySelectorAll("div[role=listitem]").forEach((e)=>{if(e.innerText.includes("user")){
 	err = chromedp.Run(ctx,
 		chromedp.Evaluate(`
@@ -154,10 +154,10 @@ func Run() {
 			WriteToFile("numberphone.txt", numberPhone+"\n")
 			quantityUsers++
 		} else {
-			fmt.Println("Propriedade 'numberphone' não encontrada no JSON.")
+			fmt.Println("Property 'numberphone' not found in JSON.")
 		}
 	}
-	fmt.Println("[+]Quantidade De Usuários:", quantityUsers)
+	fmt.Println("[+] Number of users:", quantityUsers)
 }
 
 func WriteToFile(filename string, data string) error {
