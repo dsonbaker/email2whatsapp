@@ -37,7 +37,7 @@ func BrutePaypal() {
 	defer cancel()
 	ctx, cancel = chromedp.NewContext(ctx)
 	defer cancel()
-	ctx, cancel = context.WithTimeout(ctx, 80*time.Second)
+	ctx, cancel = context.WithTimeout(ctx, 1800*time.Second)
 	defer cancel()
 	err := chromedp.Run(ctx,
 		chromedp.Navigate(url),
