@@ -74,8 +74,8 @@ func Run() {
 		return
 	}
 
-	var sleepTime = ((time.Duration(flt) + 35) * time.Second)
-	var TimeOut = ((time.Duration(flt) + 45) * time.Second)
+	var sleepTime = ((time.Duration(flt) + 5) * time.Second)
+	var TimeOut = ((time.Duration(flt) + 15) * time.Second)
 	ctx, cancel = context.WithTimeout(ctx, TimeOut)
 	defer cancel()
 	fmt.Println("[-] Estimated time:", sleepTime)
