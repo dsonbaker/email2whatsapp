@@ -21,9 +21,17 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 ---
 #### Leaked digits in the Brazilian version
 
-| Magalu         | Paypal         | PagBank        | Meli           | Rappi |
-|---             |---             |---             |---             |---    |
-| (01)9234*-**** | (0*)9***1-2345 | (0*)9****-1234 | (**)9****-1234 | (**)9****-1234 
+
+| **WebSites**          | **Leak Digits**  |
+|---                    |---                |   
+| **Magalu**            | (01)9234*-****    |
+| **PayPal**            | (0*)9***1-2345    |
+| **PagBank**           | (0*)9****-1234    |
+| **Meli**              | (**)9****-1234    |
+| **Rappi**             | (**)9****-1234    |
+
+
+
 
 - Currently in Brazil, all start with the number '9'.
 ---
