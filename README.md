@@ -8,7 +8,7 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 
 ### Demo
 + Full Demo: https://www.youtube.com/watch?v=fgcDI-uWlTE
-+ The email used has an account on PayPal and Magalu.<br>
++ The email used has an account on PayPal and Magalu.<br><br>
 [![Demo email2whatsapp](https://github.com/dsonbaker/email2whatsapp/blob/main/videos/demo_email2whatsapp1080p30fps.gif?raw=true)](https://vimeo.com/894134684)
 
 ##### Here are some key features of email2whatsapp
