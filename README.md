@@ -35,7 +35,23 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 
 - Currently in Brazil, all start with the number '9'.
 ---
+## Usage
 
+- Scrape websites for phone number digits.
+    ```
+    email2whatsapp -email target@gmail.com
+    ```
+- Search for numbers with WhatsApp (the users.csv file should have been imported into Google Contacts).
+    > Manually check after about 10 minutes if the WhatsApp contact list has synchronized, searching for "user " in the WhatsApp contact list.
+    ```
+    email2whatsapp -whatsapp
+    ```
+- Uses brute force to detect if it's the correct number (you'll need to solve some captchas for it to work properly).
+    > Meli is the only one among these sources that returns the email initials.
+    ```
+    email2whatsapp -bruteforce paypal
+    ```
+---
 ## Technique to detect if a WhatsApp number exists.
 - Instead of using paid APIs, the tutorial uses the feature of importing contacts from Google Contacts (contacts.google.com) using the same account linked to your smartphone.
 - Wait for 8-15 minutes (depending on the number of contacts) for the WhatsApp contacts list to update.
