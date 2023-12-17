@@ -35,6 +35,11 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 
 - Currently in Brazil, all start with the number '9'.
 ---
+## Instalation
+```
+go install -v github.com/dsonbaker/email2whatsapp@latest
+```
+---
 ## Usage
 
 - Scrape websites for phone number digits.
