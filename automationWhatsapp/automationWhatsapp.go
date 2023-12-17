@@ -1,177 +1,113 @@
 package automationWhatsapp
 
 import (
+	"bufio"
 	"context"
-	"encoding/json"
 	"fmt"
-	"log"
+	"io"
+	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
-	"strconv"
-	"strings"
-	"time"
+	"syscall"
 
-	"github.com/chromedp/chromedp"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/mdp/qrterminal/v3"
+	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/store/sqlstore"
+	"go.mau.fi/whatsmeow/types/events"
+
+	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
+func eventHandler(evt interface{}) {
+	switch v := evt.(type) {
+	case *events.Message:
+		fmt.Println("Received a message!", v.Message.GetConversation())
+	}
+}
+
 func Run() {
-
-	url := "https://web.whatsapp.com/"
-	ctx, cancel := chromedp.NewContext(
-		context.Background(),
-		chromedp.WithDebugf(log.Printf),
-	)
-	defer cancel()
-	options := []chromedp.ExecAllocatorOption{
-		chromedp.Flag("headless", false), // set headless to false
-		chromedp.Flag("disable-gpu", true),
-		chromedp.Flag("disable-cache", true),
+	listPhones := []string{}
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		listPhones = append(listPhones, "+"+scanner.Text())
 	}
-	ctx, cancel = chromedp.NewExecAllocator(ctx, options...)
-	defer cancel()
 
-	ctx, cancel = chromedp.NewContext(ctx)
-	defer cancel()
-
-	if err := chromedp.Run(ctx, chromedp.Navigate(url), chromedp.WaitVisible(`#pane-side`, chromedp.ByQuery)); err != nil {
-		log.Fatal(err)
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "Erro de leitura:", err)
 	}
-	err := chromedp.Run(ctx,
-		chromedp.Sleep(5*time.Second),
-		chromedp.WaitVisible(`document.querySelectorAll("[role=button]")[4]`, chromedp.ByJSPath),
-		chromedp.Evaluate(`document.querySelectorAll("[role=button]")[4].click()`, nil),
-		chromedp.Sleep(3*time.Second),
-		//chromedp.SendKeys(`input:nth-of-type(1)`, str[len(str)-1:len(str)], chromedp.ByQuery),
-		chromedp.WaitVisible(`document.querySelector('[role=textbox]')`, chromedp.ByJSPath),
-		chromedp.Evaluate(`document.querySelectorAll('[role=textbox]')[0].click()`, nil),
-		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, `user`, chromedp.ByJSPath),
-		chromedp.Sleep(1*time.Second),
-		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, ` `, chromedp.ByJSPath),
-		chromedp.Sleep(2*time.Second),
-		chromedp.Evaluate(`document.querySelectorAll('[role=textbox]')[0].click()`, nil),
-		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, "\b", chromedp.ByJSPath),
-		chromedp.Sleep(2*time.Second),
-		chromedp.SendKeys(`document.querySelectorAll('[role=textbox]')[0]`, ` `, chromedp.ByJSPath),
-		chromedp.Sleep(2*time.Second),
-	)
+	dbLog := waLog.Stdout("Database", "DEBUG", true)
+	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
+	container, err := sqlstore.New("sqlite3", "file:examplestore.db?_foreign_keys=on", dbLog)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	var timeMax string
-	err = chromedp.Run(ctx,
-		chromedp.Evaluate(`var positionMax = document.querySelector('[data-tab="4"]').parentElement.scrollHeight;
-						   var timePerScroll = 2000; //timePerScroll in milliSecond
-						   var positionPerScroll = 800;
-						   var timeMax = (positionMax/positionPerScroll)*(timePerScroll/1000);
-						   timeMax.toString()`, &timeMax),
-	)
+	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
+	deviceStore, err := container.GetFirstDevice()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	flt, err := strconv.ParseFloat(timeMax, 64)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	clientLog := waLog.Stdout("Client", "DEBUG", true)
+	client := whatsmeow.NewClient(deviceStore, clientLog)
+	client.AddEventHandler(eventHandler)
 
-	var sleepTime = ((time.Duration(flt) + 5) * time.Second)
-	var TimeOut = ((time.Duration(flt) + 15) * time.Second)
-	ctx, cancel = context.WithTimeout(ctx, TimeOut)
-	defer cancel()
-	fmt.Println("[-] Estimated time:", sleepTime)
-	//document.querySelectorAll("div[role=listitem]").forEach((e)=>{if(e.innerText.includes("user")){
-	err = chromedp.Run(ctx,
-		chromedp.Evaluate(`
-		var users = [];
-		var usersUnduplicate = [];
-		var positionStart = 0;
-		var positionMax = document.querySelector('[data-tab="4"]').parentElement.scrollHeight;
-		
-		function removeDuplicates(array) {
-			let unique = {};
-			let result = [];
-			
-			array.forEach(item => {
-			  if (!unique[item.numberphone]) {
-				unique[item.numberphone] = true;
-				result.push(item);
-			  }
-			});
-			
-			return result;
+	if client.Store.ID == nil {
+		// No ID stored, new login
+		qrChan, _ := client.GetQRChannel(context.Background())
+		err = client.Connect()
+		if err != nil {
+			panic(err)
 		}
-
-		function execScroll(params) {
-		   positionMax = document.querySelector('[data-tab="4"]').parentElement.scrollHeight
-		   document.querySelector('[data-tab="4"]').parentElement.scrollTop += positionPerScroll;
-		   
-		   if (positionStart < positionMax+positionPerScroll){
-			   positionStart += positionPerScroll;
-			   setTimeout(execScroll,timePerScroll)
-			   console.log("scrolling")
-			   document.querySelectorAll("div[role=listitem]").forEach((e)=>{if(e.innerText.includes("user")){
-					srcImage=""
-					if(e.getElementsByTagName("img").length >= 1) {
-						if(!e.getElementsByTagName("img")[0].getAttribute("src").includes("data:")){
-							srcImage = e.getElementsByTagName("img")[0].src
-						}
-					}
-					users.push({numberphone:e.innerText.split('\n')[0],src:srcImage})
-				}})
-		   } else {
-			   usersUnduplicate = removeDuplicates(users);
-			   console.log(usersUnduplicate)
-		   }
+		for evt := range qrChan {
+			if evt.Event == "code" {
+				// Render the QR code here
+				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+				// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
+				fmt.Println("QR code:", evt.Code)
+			} else {
+				fmt.Println("Login event:", evt.Event)
+			}
 		}
-		
-		execScroll();`, nil),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	time.Sleep(sleepTime)
-	var usersINFO string
-	err = chromedp.Run(ctx,
-		chromedp.Evaluate(`JSON.stringify(usersUnduplicate)`, &usersINFO),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decodifique o JSON para uma estrutura Golang
-
-	var listUsers []map[string]string
-	if err := json.Unmarshal([]byte(usersINFO), &listUsers); err != nil {
-		log.Fatal(err)
-	}
-
-	if err != nil {
-		fmt.Println(err)
+	} else {
+		// Already logged in, just connect
+		err = client.Connect()
+		if err != nil {
+			panic(err)
+		}
 	}
 	quantityUsers := 0
-	if _, err := os.Stat("numberphone.txt"); err == nil {
-		os.Remove("numberphone.txt")
-	}
-	for _, user := range listUsers {
-		// Acesso correto ao campo NumberPhone dentro de cada estrutura UserINFO
-		if numberPhone, ok := user["numberphone"]; ok {
-			numberPhone = strings.Split(numberPhone, " ")[1]
-			WriteToFile("all-numbers.txt", numberPhone+"\n", "./numberphone/")
-			if src, ok := user["src"]; ok {
-				if src != "" {
-					DownloadFile(src, numberPhone+".jpg", "./numberphone/profile/")
-					WriteToFile("numbers-profile.txt", numberPhone+"\n", "./numberphone/")
-				} else {
-					WriteToFile("numbers-withoutProfile.txt", numberPhone+"\n", "./numberphone/")
-				}
+	RemoveFile("all-numbers.txt")
+	RemoveFile("numbers-profile.txt")
+	RemoveFile("numbers-withoutProfile.txt")
+	for _, numberphone := range listPhones {
+		IsOnWhatsAppResponse, errIsOnWhatsApp := client.IsOnWhatsApp([]string{numberphone})
+		if errIsOnWhatsApp != nil {
+			panic(errIsOnWhatsApp)
+		}
+		if IsOnWhatsAppResponse[0].IsIn {
+			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
+			if errGetProfile != nil {
+				panic(errGetProfile)
+			}
+			WriteToFile("all-numbers.txt", numberphone+"\n", "./numberphone/")
+			if GetProfilePictureInfoResponse.URL != "" {
+				DownloadFile(GetProfilePictureInfoResponse.URL, numberphone+".jpg", "./numberphone/profile/")
+				WriteToFile("numbers-profile.txt", numberphone+"\n", "./numberphone/")
+				fmt.Println(GetProfilePictureInfoResponse.URL)
+			} else {
+				WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
 			}
 			quantityUsers++
-		} else {
-			fmt.Println("Property 'numberphone' not found in JSON.")
 		}
 	}
-	fmt.Println("[+] Number of users:", quantityUsers)
+	fmt.Println("\033[32m[+] Number of users:", quantityUsers, "\033[0m")
+	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	<-c
+
+	client.Disconnect()
 }
 
 func WriteToFile(filename string, data string, folderName string) error {
@@ -187,4 +123,30 @@ func WriteToFile(filename string, data string, folderName string) error {
 		return err
 	}
 	return nil
+}
+func DownloadFile(targetURL string, nameFile string, folderName string) {
+
+	response, err := http.Get(targetURL)
+	if err != nil {
+		panic(err)
+	}
+	defer response.Body.Close()
+
+	os.MkdirAll(folderName, os.ModePerm)
+	arquivo, err := os.Create(filepath.Join(folderName, nameFile))
+	if err != nil {
+		panic(err)
+	}
+	defer arquivo.Close()
+
+	_, err = io.Copy(arquivo, response.Body)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func RemoveFile(filename string) {
+	if _, err := os.Stat(filename); err == nil {
+		os.Remove(filename)
+	}
 }
