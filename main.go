@@ -17,7 +17,7 @@ func main() {
 	verde := "\033[32m"
 	email := flag.String("email", "", "Target email")
 	whatsapp := flag.Bool("whatsapp", false, "Whatsapp Automation Mode")
-	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter]")
+	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter, google]")
 
 	flag.Parse()
 	if *email == "" && !*whatsapp && *bruteforce == "" {
@@ -26,7 +26,7 @@ func main() {
 	}
 	if *email != "" {
 		PrintInfo(verde, "[+] Looking for Email: "+*email)
-		findingWhatsapp(*email)
+		searchLeakedNumbers(*email)
 	}
 
 	if *whatsapp {
@@ -35,8 +35,8 @@ func main() {
 	}
 	if *bruteforce != "" {
 		PrintInfo(verde, "[+] Looking for Email: "+*bruteforce)
-		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" {
-			fmt.Println("[-] Insira paypal, meli or twitter")
+		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" && *bruteforce != "google" {
+			fmt.Println("[-] Insert paypal, meli, twitter or google")
 			os.Exit(1)
 		}
 		if *bruteforce == "paypal" {
@@ -48,10 +48,13 @@ func main() {
 		if *bruteforce == "twitter" {
 			bruteforceSite.BruteTwitter()
 		}
+		if *bruteforce == "google" {
+			bruteforceSite.BruteGoogle()
+		}
 	}
 }
 
-func findingWhatsapp(email string) {
+func searchLeakedNumbers(email string) {
 	numberphoneBR := [][]string{{"*", "*"}, {"9", "*", "*", "*", "*", "*", "*", "*", "*"}}
 	possibleNumbers := []string{}
 	vermelho := "\033[31m"
@@ -207,7 +210,7 @@ func findingWhatsapp(email string) {
 	}
 
 	if len(possibleNumbers) > 0 {
-		numberUsers := googleContactsCSV(possibleNumbers)
+		numberUsers := exportContactsBR(possibleNumbers)
 		PrintInfo(verde, "[+] The contact list has \""+strconv.Itoa(numberUsers)+"\" cellphone numbers.")
 	} else {
 		PrintInfo(vermelho, "[+] Unable to find result for email: "+email)
@@ -283,21 +286,18 @@ func generateCombinationsNumber_BR(numberUnknown string) []string {
 	return combinations
 }
 
-func googleContactsCSV(possibleNumbers []string) int {
+func exportContactsBR(possibleNumbers []string) int {
 	numberUsers := 0
-	if _, err := os.Stat("users.csv"); err == nil {
-		os.Remove("users.csv")
-	}
-	err := WriteToFile("users.csv", "Name,Given Name,Additional Name,Family Name,Yomi Name,Given Name Yomi,Additional Name Yomi,Family Name Yomi,Name Prefix,Name Suffix,Initials,Nickname,Short Name,Maiden Name,Birthday,Gender,Location,Billing Information,Directory Server,Mileage,Occupation,Hobby,Sensitivity,Priority,Subject,Notes,Language,Photo,Group Membership,Phone 1 - Type,Phone 1 - Value\n")
-	if err != nil {
-		log.Fatal(err)
+	if _, err := os.Stat("possible_numbers.txt"); err == nil {
+		os.Remove("possible_numbers.txt")
 	}
 	for _, number := range possibleNumbers {
 		numbersWithDDD := generateDDD_BR(string(number[0])+string(number[1]), string(number[2:]))
 		for _, numberWithDDD := range numbersWithDDD {
 			combinationNumbers := generateCombinationsNumber_BR(numberWithDDD)
 			for _, combo := range combinationNumbers {
-				err := WriteToFile("users.csv", "user "+combo+",user "+combo+",,,,,,,,,,,,,,,,,,,,,,,,,,,* myContacts,,"+combo+"\n")
+				combo = "55" + combo
+				err := WriteToFile("possible_numbers.txt", combo+"\n")
 				if err != nil {
 					log.Fatal(err)
 				}
