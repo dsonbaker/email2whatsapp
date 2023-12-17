@@ -71,7 +71,7 @@ func BruteMercadoLivre() {
 				log.Println(err)
 
 				if i != maxTrys {
-					log.Println("[/] Tentando novamente:", numberphone)
+					log.Println("[/] Try Again:", numberphone)
 					continue
 				}
 			}
@@ -92,7 +92,7 @@ func BruteMercadoLivre() {
 			if err != nil {
 				log.Println(err)
 				if i != maxTrys {
-					log.Println("[-] Tentando novamente:", numberphone)
+					log.Println("[-] Try Again:", numberphone)
 					continue
 				}
 			}
@@ -144,7 +144,7 @@ func BruteMercadoLivre() {
 				if err != nil {
 					log.Println(err)
 					if i != maxTrys {
-						log.Println("[-] Tentando novamente[1]:", numberphone)
+						log.Println("[-] Try Again[1]:", numberphone)
 						continue
 					}
 				}
