@@ -28,7 +28,7 @@ type ResponseFlow struct {
 
 func BruteTwitter() {
 	var XGuestToken string
-	Cookie := "guest_id_marketing=v1%3A170279361290794611; guest_id_ads=v1%3A170279361290794611; personalization_id=v1_p+Jp/QF53mCOl9XM7Y8i1A==; guest_id=v1%3A170279361290794611; gt=1736268372474462334; att=1-dtstkAesfxyFE0MY9dn2YonBDs73wy5ky3sveArn; _twitter_sess=BAh7CSIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo%250ASGFzaHsABjoKQHVzZWR7ADoPY3JlYXRlZF9hdGwrCG2%252BaHaMAToMY3NyZl9p%250AZCIlZmUxNjg1ZDIwM2MxNjYwZTRjNDk5ODhjNWM4YzQzMGM6B2lkIiViYWNl%250ANjQ1ZDE0NjE5MTA0OTBlZjZiMGQ5ZjM0NTUzNw%253D%253D--9d8d698f4781b92f1e4fd1e01b6f5ebe5293fbf0"
+	Cookie := "guest_id_marketing=v1%3A170279361290794611; guest_id_ads=v1%3A170279361290794611; personalization_id=v1_p+Jp/QF53mCOl9XM7Y8i1A==; guest_id=v1%3A170279361290794611; gt=1736268372474462334; "
 
 	numberphones := []string{}
 	scanner := bufio.NewScanner(os.Stdin)
@@ -116,7 +116,11 @@ func BruteTwitter() {
 			log.Fatal(err)
 		}
 		defer resp.Body.Close()
-
+		for _, ck := range resp.Cookies() {
+			if ck.Name == "att" {
+				Cookie += "att=" + ck.Value + ";"
+			}
+		}
 		gz, err := gzip.NewReader(resp.Body)
 		if err != nil {
 			log.Fatal(err)
