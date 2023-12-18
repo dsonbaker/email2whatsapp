@@ -105,7 +105,7 @@ func BrutePaypal() {
 		if errorUser != "" {
 			fmt.Println("[-] User Not Exist:", numberphone)
 		} else {
-			WriteToFile("numbers-twitter.txt", numberphone+"\n", "./numberphone/")
+			WriteToFile("numbers-paypal.txt", numberphone+"\n", "./numberphone/")
 			fmt.Println("[+] User Exist:", numberphone)
 		}
 		time.Sleep(1 * time.Second)
