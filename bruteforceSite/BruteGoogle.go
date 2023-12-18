@@ -19,7 +19,7 @@ func BruteGoogle() {
 	numberphones := []string{}
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		numberphones = append(numberphones, scanner.Text())
+		numberphones = append(numberphones, strings.Replace(scanner.Text(), "+", "", -1))
 	}
 
 	if err := scanner.Err(); err != nil {

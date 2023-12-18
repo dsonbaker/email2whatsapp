@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/chromedp/chromedp"
@@ -17,7 +18,7 @@ func BruteMercadoLivre() {
 	payloads := []string{}
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		payloads = append(payloads, scanner.Text())
+		payloads = append(payloads, strings.Replace(scanner.Text(), "+", "", -1))
 	}
 
 	if err := scanner.Err(); err != nil {
