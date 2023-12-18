@@ -91,7 +91,7 @@ func Run() {
 			errorProfileHidden := false
 			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
 			if errGetProfile != nil {
-				if strings.Contains(errGetProfile.Error(), "hidden their profile") {
+				if strings.Contains(errGetProfile.Error(), "hidden their profile") || strings.Contains(errGetProfile.Error(), "group does not have a profile") {
 					errorProfileHidden = true
 				} else {
 					panic(errGetProfile)
