@@ -87,7 +87,7 @@ func Run() {
 		}
 		if IsOnWhatsAppResponse[0].IsIn {
 			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
-			if errGetProfile != nil {
+			if errGetProfile.Error() != "the user has hidden their profile picture from you" && errGetProfile != nil {
 				panic(errGetProfile)
 			}
 			WriteToFile("all-numbers.txt", numberphone+"\n", "./numberphone/")
