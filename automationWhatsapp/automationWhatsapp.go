@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -86,19 +87,33 @@ func Run() {
 			panic(errIsOnWhatsApp)
 		}
 		if IsOnWhatsAppResponse[0].IsIn {
-			GetProfilePictureInfoResponse, _ := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
+			quantityUsers++
+			errorProfileHidden := false
+			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
+			if errGetProfile != nil {
+				if strings.Contains(errGetProfile.Error(), "hidden their profile") {
+					errorProfileHidden = true
+				} else {
+					panic(errGetProfile)
+				}
+			}
 			WriteToFile("all-numbers.txt", numberphone+"\n", "./numberphone/")
-			if GetProfilePictureInfoResponse.URL != "" {
-				DownloadFile(GetProfilePictureInfoResponse.URL, numberphone+".jpg", "./numberphone/profile/")
-				WriteToFile("numbers-profile.txt", numberphone+"\n", "./numberphone/")
-				fmt.Println(GetProfilePictureInfoResponse.URL)
+
+			if !errorProfileHidden {
+				if GetProfilePictureInfoResponse.URL != "" {
+					DownloadFile(GetProfilePictureInfoResponse.URL, numberphone+".jpg", "./numberphone/profile/")
+					WriteToFile("numbers-profile.txt", numberphone+"\n", "./numberphone/")
+					fmt.Println(GetProfilePictureInfoResponse.URL)
+				} else {
+					WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
+				}
 			} else {
 				WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
 			}
-			quantityUsers++
 		}
 	}
 	fmt.Println("\033[32m[+] Number of users:", quantityUsers, "\033[0m")
+	os.Exit(1)
 	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
