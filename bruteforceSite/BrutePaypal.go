@@ -76,6 +76,7 @@ func BrutePaypal() {
 			}
 			if isRestart == "visible" {
 				err = chromedp.Run(ctx,
+					chromedp.Sleep(1*time.Second),
 					chromedp.WaitVisible(`#backToInputEmailLink`, chromedp.ByID),
 					chromedp.Evaluate(`document.getElementById("backToInputEmailLink").click()`, nil),
 					chromedp.SendKeys(`#email`, numberphone, chromedp.ByID),
@@ -91,8 +92,8 @@ func BrutePaypal() {
 				}
 			} else {
 				err := chromedp.Run(ctx,
-					chromedp.WaitVisible(`#email`, chromedp.ByID),
 					chromedp.Sleep(1*time.Second),
+					chromedp.WaitVisible(`#email`, chromedp.ByID),
 					chromedp.WaitNotPresent(`[action='/auth/validatecaptcha']`, chromedp.ByQuery),
 					chromedp.Sleep(1*time.Second),
 					chromedp.Evaluate(`!document.getElementsByClassName("notification-warning")[0].className.includes("hide")?document.getElementsByClassName("notification-warning")[0].innerText:""`, &errorUser),
