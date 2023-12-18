@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -88,7 +89,7 @@ func Run() {
 		if IsOnWhatsAppResponse[0].IsIn {
 			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
 			if errGetProfile != nil {
-				if errGetProfile.Error() != "error: the user has hidden their profile picture from you" {
+				if strings.Contains(errGetProfile.Error(), "the user has hidden their profile picture from you") {
 					panic(errGetProfile)
 				}
 			}
