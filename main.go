@@ -17,7 +17,7 @@ func main() {
 	verde := "\033[32m"
 	email := flag.String("email", "", "Target email")
 	whatsapp := flag.Bool("whatsapp", false, "Whatsapp Automation Mode")
-	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter, google]")
+	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter, google, microsoft]")
 
 	flag.Parse()
 	if *email == "" && !*whatsapp && *bruteforce == "" {
@@ -34,8 +34,8 @@ func main() {
 		automationWhatsapp.Run()
 	}
 	if *bruteforce != "" {
-		PrintInfo(verde, "[+] Looking for Email: "+*bruteforce)
-		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" && *bruteforce != "google" {
+		PrintInfo(verde, "[+] Use BruteForce: "+*bruteforce)
+		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" && *bruteforce != "google" && *bruteforce != "microsoft" {
 			fmt.Println("[-] Insert paypal, meli, twitter or google")
 			os.Exit(1)
 		}
@@ -50,6 +50,9 @@ func main() {
 		}
 		if *bruteforce == "google" {
 			bruteforceSite.BruteGoogle()
+		}
+		if *bruteforce == "microsoft" {
+			bruteforceSite.BruteMicrosoft()
 		}
 	}
 }
