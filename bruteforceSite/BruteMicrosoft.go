@@ -129,8 +129,10 @@ func BruteMicrosoft() {
 			return
 		}
 		if ResponseData.IfExistsResult == 0 {
-			if len(ResponseData.Credentials.OtcLoginEligibleProofs[0].Display) > 0 {
-				fmt.Println("\033[32m[+] " + numberphone + " => " + ResponseData.Credentials.OtcLoginEligibleProofs[0].Display + "\033[0m")
+			if len(ResponseData.Credentials.OtcLoginEligibleProofs) > 0 {
+				if len(ResponseData.Credentials.OtcLoginEligibleProofs[0].Display) > 0 {
+					fmt.Println("\033[32m[+] " + numberphone + " => " + ResponseData.Credentials.OtcLoginEligibleProofs[0].Display + "\033[0m")
+				}
 			}
 		}
 		time.Sleep(500 * time.Millisecond)
