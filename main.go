@@ -11,6 +11,7 @@ import (
 	"github.com/dsonbaker/email2whatsapp/automationWhatsapp"
 	"github.com/dsonbaker/email2whatsapp/bruteforceSite"
 	"github.com/dsonbaker/email2whatsapp/cellphone"
+	"github.com/dsonbaker/email2whatsapp/existAccount"
 )
 
 func main() {
@@ -211,6 +212,8 @@ func searchLeakedNumbers(email string) {
 			numberShow = ""
 		}
 	}
+
+	existAccount.AccountMicrosoft(email)
 
 	if len(possibleNumbers) > 0 {
 		numberUsers := exportContactsBR(possibleNumbers)
