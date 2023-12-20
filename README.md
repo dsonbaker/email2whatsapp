@@ -7,9 +7,9 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 ---
 
 ### Demo
-+ Full Demo: https://www.youtube.com/watch?v=fgcDI-uWlTE
++ Full Demo: https://youtu.be/YcWO0BmVKK0
 + The email used has an account on PayPal and Magalu.<br><br>
-[![Demo email2whatsapp](https://github.com/dsonbaker/email2whatsapp/blob/main/videos/demo_email2whatsapp1080p30fps.gif?raw=true)](https://vimeo.com/894134684)
+![Demo email2whatsapp](https://github.com/dsonbaker/email2whatsapp/blob/main/videos/demo_email2whatsapp1080p30fps.gif?raw=true)
 
 ##### Here are some key features of email2whatsapp
 
@@ -46,20 +46,26 @@ go install -v github.com/dsonbaker/email2whatsapp@latest
     ```
     email2whatsapp -email target@gmail.com
     ```
-- Search for numbers with WhatsApp (the users.csv file should have been imported into Google Contacts).
-    > Manually check after about 10 minutes if the WhatsApp contact list has synchronized, searching for "user " in the WhatsApp contact list.
+- Search for numbers with WhatsApp.
+    > Connect your WhatsApp using the QR code.
     ```
-    email2whatsapp -whatsapp
+    echo 5521912345678 | email2whatsapp -whatsapp
     ```
 - Uses brute force to detect if it's the correct number (you'll need to solve some captchas for it to work properly).
-    > Meli is the only one among these sources that returns the email initials.
+    > Meli returns the email initials.
     ```
-    email2whatsapp -bruteforce paypal
+    echo 5521912345678 | email2whatsapp -bruteforce meli
+    ```
+
+- Uses brute force to detect if it's the correct number (No need to solve a captcha).
+    > Microsoft returns the email initials.
+    ```
+    echo 5521912345678 | email2whatsapp -bruteforce microsoft
     ```
 ---
 ## Technique to detect if a WhatsApp number exists.
-- Instead of using paid APIs, the tutorial uses the feature of importing contacts from Google Contacts (contacts.google.com) using the same account linked to your smartphone.
-- Wait for 8-15 minutes (depending on the number of contacts) for the WhatsApp contacts list to update.
+- The [Whatsmeow](https://github.com/tulir/whatsmeow) project was used to establish a connection with the WhatsApp protocol.
+- The process of searching for valid numbers, in the case of a list of 5000 possible numbers, can take around 15 minutes.
 - Use the command `email2whatsapp -whatsapp` and log in.
 - The command will generate a folder named `./numberphone/all-numbers.txt`, which corresponds to the quantity of valid phone numbers found.
 - If you know the photo of the person who owns the email, check the folder `./numberphone/profile/`, where public photos of each number are stored.
@@ -73,7 +79,11 @@ go install -v github.com/dsonbaker/email2whatsapp@latest
         - PayPal will only return whether the user exists or not.
     - twitter
         - Twitter, the initial requests can link to the email. However, after a certain number of requests, it will only return whether the user exists or not.
-> Note that all these sites have captcha verification, hence requiring human assistance for captcha resolution. Therefore, the fewer possibilities, the better the result will be.
+    - google
+        - Google will only return if the number is linked to an account.
+    - microsoft
+        - Microsoft will return some characters of the email linked to the number.
+> Note that some of these websites have captcha verification, thus requiring human assistance for captcha resolution. Therefore, the fewer the possibilities, the better the outcome.
 ---
 #### Disclaimer
 > Please note that responsible use of this tool is essential. It’s important to respect individuals’ privacy and rights when using such tools.
