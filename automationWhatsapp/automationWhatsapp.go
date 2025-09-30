@@ -176,8 +176,6 @@ func Run() {
 			fmt.Println(" | [ # ] Sem foto/perfil oculto")
 		}
 
-		// Delay entre requisições
-		time.Sleep(1 * time.Second)
 	}
 
 	fmt.Println("\n" + strings.Repeat("=", 50))
