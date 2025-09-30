@@ -1,0 +1,296 @@
+# filippo.io/edwards25519 v1.1.0
+## explicit; go 1.20
+filippo.io/edwards25519
+filippo.io/edwards25519/field
+# github.com/beeper/argo-go v1.1.2
+## explicit; go 1.23.0
+github.com/beeper/argo-go/block
+github.com/beeper/argo-go/codec
+github.com/beeper/argo-go/header
+github.com/beeper/argo-go/internal/util
+github.com/beeper/argo-go/label
+github.com/beeper/argo-go/pkg/bitset
+github.com/beeper/argo-go/pkg/buf
+github.com/beeper/argo-go/pkg/varint
+github.com/beeper/argo-go/wire
+github.com/beeper/argo-go/wirecodec
+# github.com/chromedp/cdproto v0.0.0-20231011050154-1d073bb38998
+## explicit; go 1.19
+github.com/chromedp/cdproto
+github.com/chromedp/cdproto/accessibility
+github.com/chromedp/cdproto/animation
+github.com/chromedp/cdproto/audits
+github.com/chromedp/cdproto/autofill
+github.com/chromedp/cdproto/backgroundservice
+github.com/chromedp/cdproto/browser
+github.com/chromedp/cdproto/cachestorage
+github.com/chromedp/cdproto/cast
+github.com/chromedp/cdproto/cdp
+github.com/chromedp/cdproto/css
+github.com/chromedp/cdproto/database
+github.com/chromedp/cdproto/debugger
+github.com/chromedp/cdproto/deviceaccess
+github.com/chromedp/cdproto/deviceorientation
+github.com/chromedp/cdproto/dom
+github.com/chromedp/cdproto/domdebugger
+github.com/chromedp/cdproto/domsnapshot
+github.com/chromedp/cdproto/domstorage
+github.com/chromedp/cdproto/emulation
+github.com/chromedp/cdproto/eventbreakpoints
+github.com/chromedp/cdproto/fedcm
+github.com/chromedp/cdproto/fetch
+github.com/chromedp/cdproto/headlessexperimental
+github.com/chromedp/cdproto/heapprofiler
+github.com/chromedp/cdproto/indexeddb
+github.com/chromedp/cdproto/input
+github.com/chromedp/cdproto/inspector
+github.com/chromedp/cdproto/io
+github.com/chromedp/cdproto/layertree
+github.com/chromedp/cdproto/log
+github.com/chromedp/cdproto/media
+github.com/chromedp/cdproto/memory
+github.com/chromedp/cdproto/network
+github.com/chromedp/cdproto/overlay
+github.com/chromedp/cdproto/page
+github.com/chromedp/cdproto/performance
+github.com/chromedp/cdproto/performancetimeline
+github.com/chromedp/cdproto/preload
+github.com/chromedp/cdproto/profiler
+github.com/chromedp/cdproto/runtime
+github.com/chromedp/cdproto/security
+github.com/chromedp/cdproto/serviceworker
+github.com/chromedp/cdproto/storage
+github.com/chromedp/cdproto/systeminfo
+github.com/chromedp/cdproto/target
+github.com/chromedp/cdproto/tethering
+github.com/chromedp/cdproto/tracing
+github.com/chromedp/cdproto/webaudio
+github.com/chromedp/cdproto/webauthn
+# github.com/chromedp/chromedp v0.9.3
+## explicit; go 1.16
+github.com/chromedp/chromedp
+github.com/chromedp/chromedp/device
+github.com/chromedp/chromedp/kb
+# github.com/chromedp/sysutil v1.0.0
+## explicit; go 1.15
+github.com/chromedp/sysutil
+# github.com/elliotchance/orderedmap/v3 v3.1.0
+## explicit; go 1.23.0
+github.com/elliotchance/orderedmap/v3
+# github.com/gobwas/httphead v0.1.0
+## explicit; go 1.15
+github.com/gobwas/httphead
+# github.com/gobwas/pool v0.2.1
+## explicit
+github.com/gobwas/pool
+github.com/gobwas/pool/internal/pmath
+github.com/gobwas/pool/pbufio
+github.com/gobwas/pool/pbytes
+# github.com/gobwas/ws v1.3.0
+## explicit; go 1.15
+github.com/gobwas/ws
+github.com/gobwas/ws/wsutil
+# github.com/google/uuid v1.6.0
+## explicit
+github.com/google/uuid
+# github.com/gorilla/websocket v1.5.3
+## explicit; go 1.12
+github.com/gorilla/websocket
+# github.com/josharian/intern v1.0.0
+## explicit; go 1.5
+github.com/josharian/intern
+# github.com/mailru/easyjson v0.7.7
+## explicit; go 1.12
+github.com/mailru/easyjson
+github.com/mailru/easyjson/buffer
+github.com/mailru/easyjson/jlexer
+github.com/mailru/easyjson/jwriter
+# github.com/mattn/go-colorable v0.1.14
+## explicit; go 1.18
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.20
+## explicit; go 1.15
+github.com/mattn/go-isatty
+# github.com/mattn/go-sqlite3 v1.14.32
+## explicit; go 1.19
+github.com/mattn/go-sqlite3
+# github.com/mdp/qrterminal/v3 v3.2.0
+## explicit; go 1.20
+github.com/mdp/qrterminal/v3
+# github.com/petermattis/goid v0.0.0-20250904145737-900bdf8bb490
+## explicit; go 1.17
+github.com/petermattis/goid
+# github.com/rs/zerolog v1.34.0
+## explicit; go 1.15
+github.com/rs/zerolog
+github.com/rs/zerolog/internal/cbor
+github.com/rs/zerolog/internal/json
+github.com/rs/zerolog/log
+# github.com/vektah/gqlparser/v2 v2.5.30
+## explicit; go 1.22
+github.com/vektah/gqlparser/v2/ast
+# go.mau.fi/libsignal v0.2.0
+## explicit; go 1.23.0
+go.mau.fi/libsignal/cipher
+go.mau.fi/libsignal/ecc
+go.mau.fi/libsignal/groups
+go.mau.fi/libsignal/groups/ratchet
+go.mau.fi/libsignal/groups/state/record
+go.mau.fi/libsignal/groups/state/store
+go.mau.fi/libsignal/kdf
+go.mau.fi/libsignal/keys/chain
+go.mau.fi/libsignal/keys/identity
+go.mau.fi/libsignal/keys/message
+go.mau.fi/libsignal/keys/prekey
+go.mau.fi/libsignal/keys/root
+go.mau.fi/libsignal/keys/session
+go.mau.fi/libsignal/logger
+go.mau.fi/libsignal/protocol
+go.mau.fi/libsignal/ratchet
+go.mau.fi/libsignal/serialize
+go.mau.fi/libsignal/session
+go.mau.fi/libsignal/signalerror
+go.mau.fi/libsignal/state/record
+go.mau.fi/libsignal/state/store
+go.mau.fi/libsignal/util/bytehelper
+go.mau.fi/libsignal/util/errorhelper
+go.mau.fi/libsignal/util/keyhelper
+go.mau.fi/libsignal/util/medium
+go.mau.fi/libsignal/util/optional
+# go.mau.fi/util v0.9.1
+## explicit; go 1.24.0
+go.mau.fi/util/dbutil
+go.mau.fi/util/exbytes
+go.mau.fi/util/exerrors
+go.mau.fi/util/exhttp
+go.mau.fi/util/exslices
+go.mau.fi/util/exstrings
+go.mau.fi/util/exsync
+go.mau.fi/util/exzerolog
+go.mau.fi/util/fallocate
+go.mau.fi/util/jsontime
+go.mau.fi/util/ptr
+go.mau.fi/util/random
+go.mau.fi/util/retryafter
+# go.mau.fi/whatsmeow v0.0.0-20250929162548-7c04e9b206b1
+## explicit; go 1.24.0
+go.mau.fi/whatsmeow
+go.mau.fi/whatsmeow/appstate
+go.mau.fi/whatsmeow/appstate/lthash
+go.mau.fi/whatsmeow/argo
+go.mau.fi/whatsmeow/binary
+go.mau.fi/whatsmeow/binary/token
+go.mau.fi/whatsmeow/proto
+go.mau.fi/whatsmeow/proto/armadilloutil
+go.mau.fi/whatsmeow/proto/instamadilloAddMessage
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeActionLog
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeAdminMessage
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeCollection
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeLink
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeMedia
+go.mau.fi/whatsmeow/proto/instamadilloCoreTypeText
+go.mau.fi/whatsmeow/proto/instamadilloDeleteMessage
+go.mau.fi/whatsmeow/proto/instamadilloSupplementMessage
+go.mau.fi/whatsmeow/proto/instamadilloTransportPayload
+go.mau.fi/whatsmeow/proto/instamadilloXmaContentRef
+go.mau.fi/whatsmeow/proto/waAICommon
+go.mau.fi/whatsmeow/proto/waAdv
+go.mau.fi/whatsmeow/proto/waArmadilloApplication
+go.mau.fi/whatsmeow/proto/waArmadilloXMA
+go.mau.fi/whatsmeow/proto/waCert
+go.mau.fi/whatsmeow/proto/waChatLockSettings
+go.mau.fi/whatsmeow/proto/waCommon
+go.mau.fi/whatsmeow/proto/waCompanionReg
+go.mau.fi/whatsmeow/proto/waConsumerApplication
+go.mau.fi/whatsmeow/proto/waDeviceCapabilities
+go.mau.fi/whatsmeow/proto/waE2E
+go.mau.fi/whatsmeow/proto/waHistorySync
+go.mau.fi/whatsmeow/proto/waLidMigrationSyncPayload
+go.mau.fi/whatsmeow/proto/waMediaTransport
+go.mau.fi/whatsmeow/proto/waMmsRetry
+go.mau.fi/whatsmeow/proto/waMsgApplication
+go.mau.fi/whatsmeow/proto/waMsgTransport
+go.mau.fi/whatsmeow/proto/waMultiDevice
+go.mau.fi/whatsmeow/proto/waServerSync
+go.mau.fi/whatsmeow/proto/waStatusAttributions
+go.mau.fi/whatsmeow/proto/waSyncAction
+go.mau.fi/whatsmeow/proto/waUserPassword
+go.mau.fi/whatsmeow/proto/waVnameCert
+go.mau.fi/whatsmeow/proto/waWa6
+go.mau.fi/whatsmeow/proto/waWeb
+go.mau.fi/whatsmeow/socket
+go.mau.fi/whatsmeow/store
+go.mau.fi/whatsmeow/store/sqlstore
+go.mau.fi/whatsmeow/store/sqlstore/upgrades
+go.mau.fi/whatsmeow/types
+go.mau.fi/whatsmeow/types/events
+go.mau.fi/whatsmeow/util/cbcutil
+go.mau.fi/whatsmeow/util/gcmutil
+go.mau.fi/whatsmeow/util/hkdfutil
+go.mau.fi/whatsmeow/util/keys
+go.mau.fi/whatsmeow/util/log
+# golang.org/x/crypto v0.42.0
+## explicit; go 1.24.0
+golang.org/x/crypto/curve25519
+golang.org/x/crypto/hkdf
+golang.org/x/crypto/pbkdf2
+# golang.org/x/exp v0.0.0-20250911091902-df9299821621
+## explicit; go 1.24.0
+golang.org/x/exp/constraints
+# golang.org/x/net v0.44.0
+## explicit; go 1.24.0
+golang.org/x/net/http/httpguts
+golang.org/x/net/http2
+golang.org/x/net/http2/hpack
+golang.org/x/net/idna
+golang.org/x/net/internal/httpcommon
+golang.org/x/net/internal/socks
+golang.org/x/net/proxy
+# golang.org/x/sys v0.36.0
+## explicit; go 1.24.0
+golang.org/x/sys/plan9
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/term v0.35.0
+## explicit; go 1.24.0
+golang.org/x/term
+# golang.org/x/text v0.29.0
+## explicit; go 1.24.0
+golang.org/x/text/secure/bidirule
+golang.org/x/text/transform
+golang.org/x/text/unicode/bidi
+golang.org/x/text/unicode/norm
+# google.golang.org/protobuf v1.36.9
+## explicit; go 1.23
+google.golang.org/protobuf/encoding/prototext
+google.golang.org/protobuf/encoding/protowire
+google.golang.org/protobuf/internal/descfmt
+google.golang.org/protobuf/internal/descopts
+google.golang.org/protobuf/internal/detrand
+google.golang.org/protobuf/internal/editiondefaults
+google.golang.org/protobuf/internal/encoding/defval
+google.golang.org/protobuf/internal/encoding/messageset
+google.golang.org/protobuf/internal/encoding/tag
+google.golang.org/protobuf/internal/encoding/text
+google.golang.org/protobuf/internal/errors
+google.golang.org/protobuf/internal/filedesc
+google.golang.org/protobuf/internal/filetype
+google.golang.org/protobuf/internal/flags
+google.golang.org/protobuf/internal/genid
+google.golang.org/protobuf/internal/impl
+google.golang.org/protobuf/internal/order
+google.golang.org/protobuf/internal/pragma
+google.golang.org/protobuf/internal/protolazy
+google.golang.org/protobuf/internal/set
+google.golang.org/protobuf/internal/strs
+google.golang.org/protobuf/internal/version
+google.golang.org/protobuf/proto
+google.golang.org/protobuf/reflect/protoreflect
+google.golang.org/protobuf/reflect/protoregistry
+google.golang.org/protobuf/runtime/protoiface
+google.golang.org/protobuf/runtime/protoimpl
+# rsc.io/qr v0.2.0
+## explicit
+rsc.io/qr
+rsc.io/qr/coding
+rsc.io/qr/gf256
