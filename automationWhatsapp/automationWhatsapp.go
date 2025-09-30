@@ -7,10 +7,9 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/signal"
 	"path/filepath"
 	"strings"
-	"syscall"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mdp/qrterminal/v3"
@@ -25,10 +24,15 @@ func eventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
 		fmt.Println("Received a message!", v.Message.GetConversation())
+	case *events.Connected:
+		fmt.Println("[ v ] Conexão estabelecida com sucesso!")
+	case *events.StreamReplaced:
+		fmt.Println("[ x ] Stream foi substituído, reconectando...")
 	}
 }
 
 func Run() {
+	// Ler números do stdin
 	listPhones := []string{}
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -37,87 +41,149 @@ func Run() {
 
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "Erro de leitura:", err)
+		return
 	}
+
+	if len(listPhones) == 0 {
+		fmt.Println("Nenhum número foi fornecido")
+		return
+	}
+
+	fmt.Printf("Números para processar: %d\n", len(listPhones))
+
+	// Configurar banco de dados
 	dbLog := waLog.Stdout("Database", "DEBUG", true)
-	// Make sure you add appropriate DB connector imports, e.g. github.com/mattn/go-sqlite3 for SQLite
-	container, err := sqlstore.New(context.Background(), "sqlite3", "file:examplestore.db?_foreign_keys=on", dbLog)
+	container, err := sqlstore.New(
+		context.Background(),
+		"sqlite3",
+		"file:examplestore.db?_foreign_keys=on",
+		dbLog,
+	)
 	if err != nil {
 		panic(err)
 	}
-	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
+
+	// Obter dispositivo
 	deviceStore, err := container.GetFirstDevice(context.Background())
 	if err != nil {
 		panic(err)
 	}
+
+	// Criar cliente
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 	client.AddEventHandler(eventHandler)
 
+	// Verificar se precisa fazer login
 	if client.Store.ID == nil {
-		// No ID stored, new login
-		qrChan, _ := client.GetQRChannel(context.Background())
+		fmt.Println("Nenhuma sessão encontrada. Faça login escaneando o QR Code:")
+
+		qrChan, _ := client.GetQRChannel(context.TODO())
 		err = client.Connect()
 		if err != nil {
 			panic(err)
 		}
+
 		for evt := range qrChan {
 			if evt.Event == "code" {
-				// Render the QR code here
 				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-				// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
-				fmt.Println("QR code:", evt.Code)
+				fmt.Println("\nEscaneie o QR code acima com seu WhatsApp")
 			} else {
 				fmt.Println("Login event:", evt.Event)
 			}
 		}
+
+		fmt.Println("[ v ] Login realizado com sucesso!")
+		fmt.Println("Aguardando sincronização completa do WhatsApp...")
+		time.Sleep(15 * time.Second)
+
 	} else {
-		// Already logged in, just connect
+		fmt.Println("Sessão encontrada. Conectando...")
 		err = client.Connect()
 		if err != nil {
 			panic(err)
 		}
+
+		fmt.Println("Aguardando estabilização da conexão...")
+		time.Sleep(5 * time.Second)
 	}
+
+	// Verificar se está conectado
+	if !client.IsConnected() {
+		fmt.Println("[ x ] Erro: Cliente não está conectado")
+		return
+	}
+
+	fmt.Println("[ v ] Cliente conectado e pronto!")
+	fmt.Println("Iniciando processamento dos números...")
+
+	// Limpar arquivos anteriores
 	quantityUsers := 0
-	RemoveFile("all-numbers.txt")
-	RemoveFile("numbers-profile.txt")
-	RemoveFile("numbers-withoutProfile.txt")
-	for _, numberphone := range listPhones {
+	RemoveFile("./numberphone/all-numbers.txt")
+	RemoveFile("./numberphone/numbers-profile.txt")
+	RemoveFile("./numberphone/numbers-withoutProfile.txt")
+
+	// Processar cada número
+	for i, numberphone := range listPhones {
+		fmt.Printf("[%d/%d] Verificando %s... ", i+1, len(listPhones), numberphone)
+
+		// Verificar se o número está no WhatsApp (como no código original)
 		IsOnWhatsAppResponse, errIsOnWhatsApp := client.IsOnWhatsApp([]string{numberphone})
 		if errIsOnWhatsApp != nil {
-			panic(errIsOnWhatsApp)
+			fmt.Printf("[ x ] Erro: %v\n", errIsOnWhatsApp)
+			continue
 		}
-		if IsOnWhatsAppResponse[0].IsIn {
-			quantityUsers++
-			errorProfileHidden := false
-			GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
-			if errGetProfile != nil {
-				if strings.Contains(errGetProfile.Error(), "hidden their profile") || strings.Contains(errGetProfile.Error(), "group does not have a profile") {
-					errorProfileHidden = true
-				} else {
-					panic(errGetProfile)
-				}
-			}
-			WriteToFile("all-numbers.txt", numberphone+"\n", "./numberphone/")
 
-			if !errorProfileHidden {
-				if GetProfilePictureInfoResponse.URL != "" {
-					DownloadFile(GetProfilePictureInfoResponse.URL, numberphone+".jpg", "./numberphone/profile/")
-					WriteToFile("numbers-profile.txt", numberphone+"\n", "./numberphone/")
-					fmt.Println(GetProfilePictureInfoResponse.URL)
-				} else {
-					WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
-				}
+		if !IsOnWhatsAppResponse[0].IsIn {
+			fmt.Println("[ x ] Não está no WhatsApp")
+			continue
+		}
+
+		// Número está no WhatsApp
+		quantityUsers++
+		fmt.Print("[ v ] Tem WhatsApp:", numberphone)
+
+		WriteToFile("all-numbers.txt", numberphone+"\n", "./numberphone/")
+
+		// Pequeno delay antes de pegar foto
+		time.Sleep(500 * time.Millisecond)
+
+		// Tentar obter foto de perfil
+		errorProfileHidden := false
+		GetProfilePictureInfoResponse, errGetProfile := client.GetProfilePictureInfo(IsOnWhatsAppResponse[0].JID, nil)
+
+		if errGetProfile != nil {
+			if strings.Contains(errGetProfile.Error(), "hidden their profile") ||
+				strings.Contains(errGetProfile.Error(), "group does not have a profile") {
+				errorProfileHidden = true
+			} else {
+				fmt.Printf(" | [ x ] Erro ao obter foto: %v", errGetProfile)
+				errorProfileHidden = true
+			}
+		}
+
+		if !errorProfileHidden && GetProfilePictureInfoResponse != nil && GetProfilePictureInfoResponse.URL != "" {
+			err := DownloadFile(GetProfilePictureInfoResponse.URL, numberphone+".jpg", "./numberphone/profile/")
+			if err == nil {
+				WriteToFile("numbers-profile.txt", numberphone+"\n", "./numberphone/")
+				fmt.Println(" | [ v ] Foto baixada")
 			} else {
 				WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
+				fmt.Printf(" | [ x ] Erro ao baixar foto: %v\n", err)
 			}
+		} else {
+			WriteToFile("numbers-withoutProfile.txt", numberphone+"\n", "./numberphone/")
+			fmt.Println(" | [ # ] Sem foto/perfil oculto")
 		}
+
+		// Delay entre requisições
+		time.Sleep(1 * time.Second)
 	}
-	fmt.Println("\033[32m[+] Number of users:", quantityUsers, "\033[0m")
-	os.Exit(1)
-	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	<-c
+
+	fmt.Println("\n" + strings.Repeat("=", 50))
+	fmt.Printf("\033[32m[ v ] Processamento concluído!\033[0m\n")
+	fmt.Printf("\033[32m  Total de números no WhatsApp: %d de %d\033[0m\n", quantityUsers, len(listPhones))
+	fmt.Println(strings.Repeat("=", 50))
 
 	client.Disconnect()
 }
@@ -136,25 +202,31 @@ func WriteToFile(filename string, data string, folderName string) error {
 	}
 	return nil
 }
-func DownloadFile(targetURL string, nameFile string, folderName string) {
 
+func DownloadFile(targetURL string, nameFile string, folderName string) error {
 	response, err := http.Get(targetURL)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("erro ao fazer request: %w", err)
 	}
 	defer response.Body.Close()
+
+	if response.StatusCode != 200 {
+		return fmt.Errorf("status code: %d", response.StatusCode)
+	}
 
 	os.MkdirAll(folderName, os.ModePerm)
 	arquivo, err := os.Create(filepath.Join(folderName, nameFile))
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("erro ao criar arquivo: %w", err)
 	}
 	defer arquivo.Close()
 
 	_, err = io.Copy(arquivo, response.Body)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("erro ao copiar dados: %w", err)
 	}
+
+	return nil
 }
 
 func RemoveFile(filename string) {
