@@ -1,17 +1,18 @@
 package cellphone
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/kb"
-	"context"
-	"time"
-	"log"
 )
 
 func Magalu(email string) string {
 	maxTrys := 2
-	url := "https://sacola.magazineluiza.com.br/n#/recuperar-senha/?"	
+	url := "https://sacola.magazineluiza.com.br/n#/recuperar-senha/?"
 	//currentTime := time.Now()
 	//formattedTime := currentTime.Format("2006-01-02 15:04:05")
 	//fmt.Println("["+formattedTime+"]", "[URL] [TRY]", url)
@@ -25,7 +26,7 @@ func Magalu(email string) string {
 			chromedp.Flag("headless", false), // set headless to false
 			chromedp.Flag("disable-gpu", true),
 		}
-	} else{
+	} else {
 		options = []chromedp.ExecAllocatorOption{
 			chromedp.Flag("ignore-certificate-errors", "1"),
 			chromedp.Flag("headless", false), // set headless to false
@@ -47,15 +48,15 @@ func Magalu(email string) string {
 		errorUser := ""
 		err := chromedp.Run(ctx,
 			chromedp.Navigate(url),
-			chromedp.WaitVisible(`#identificationReset`, chromedp.ByID), // substitua 'inputID' pelo ID do seu elemento de entrada
+			chromedp.WaitVisible(`#input-1`, chromedp.ByID), // substitua 'inputID' pelo ID do seu elemento de entrada
 			chromedp.Sleep(1*time.Second),
-			chromedp.SendKeys(`#identificationReset`, email, chromedp.ByID),
+			chromedp.SendKeys(`#input-1`, email, chromedp.ByID),
 			chromedp.Sleep((15/10)*time.Second),
 			chromedp.KeyEvent(kb.Enter),
-			chromedp.WaitVisible(`.FormGroup-errorMessage, .SelectTruncatedPhoneOrEmail-PhoneNumber`, chromedp.ByQuery),
-			chromedp.Evaluate(`document.getElementsByClassName("SelectTruncatedPhoneOrEmail-PhoneNumber")[0]?document.getElementsByClassName("SelectTruncatedPhoneOrEmail-PhoneNumber")[0].innerText:""`, &Leak_phoneNumber),
-			chromedp.Evaluate(`document.getElementsByClassName("FormGroup-errorMessage")[0]?document.getElementsByClassName("FormGroup-errorMessage")[0].innerText:""`, &errorUser),
-			)
+			chromedp.WaitVisible(`.FormResetPasswordIdentification-Form .error, #SelectTruncatedPhoneOrEmail-phoneText`, chromedp.ByQuery),
+			chromedp.Evaluate(`document.querySelector("#SelectTruncatedPhoneOrEmail-phoneText")?document.querySelector("#SelectTruncatedPhoneOrEmail-phoneText").innerText:""`, &Leak_phoneNumber),
+			chromedp.Evaluate(`document.querySelector(".FormResetPasswordIdentification-Form .error")?document.querySelector(".FormResetPasswordIdentification-Form .error").innerText:""`, &errorUser),
+		)
 		if err != nil {
 			log.Println(err)
 			if i != maxTrys {
