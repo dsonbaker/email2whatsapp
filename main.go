@@ -18,7 +18,7 @@ func main() {
 	verde := "\033[32m"
 	email := flag.String("email", "", "Target email")
 	whatsapp := flag.Bool("whatsapp", false, "Whatsapp Automation Mode")
-	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter, google, microsoft]")
+	bruteforce := flag.String("bruteforce", "", "Select one of the sites for bruteforce: [paypal, meli, twitter, google, microsoft, uber]")
 
 	flag.Parse()
 	if *email == "" && !*whatsapp && *bruteforce == "" {
@@ -36,7 +36,7 @@ func main() {
 	}
 	if *bruteforce != "" {
 		PrintInfo(verde, "[+] Use BruteForce: "+*bruteforce)
-		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" && *bruteforce != "google" && *bruteforce != "microsoft" {
+		if *bruteforce != "paypal" && *bruteforce != "meli" && *bruteforce != "twitter" && *bruteforce != "google" && *bruteforce != "microsoft" && *bruteforce != "uber" {
 			fmt.Println("[-] Insert paypal, meli, twitter or google")
 			os.Exit(1)
 		}
@@ -54,6 +54,9 @@ func main() {
 		}
 		if *bruteforce == "microsoft" {
 			bruteforceSite.BruteMicrosoft()
+		}
+		if *bruteforce == "uber" {
+			bruteforceSite.BruteUber()
 		}
 	}
 }
@@ -93,6 +96,12 @@ func searchLeakedNumbers(email string) {
 	rappiPhone := cellphone.Rappi(email)
 	if rappiPhone != "" {
 		PrintInfo(vermelho, "[!] Found Number: "+rappiPhone)
+	}
+	// Uber
+	PrintInfo(verde, "[+] Searching on Uber.")
+	uberPhone := cellphone.Uber(email)
+	if uberPhone != "" {
+		PrintInfo(vermelho, "[!] Found Number: "+uberPhone)
 	}
 
 	if len(magaluPhone) > 1 {
@@ -213,6 +222,37 @@ func searchLeakedNumbers(email string) {
 		}
 	}
 
+	if len(uberPhone) > 1 {
+		newNumber := false
+		if len(paypalPhone) > 1 {
+			if string(rappiPhone[len(rappiPhone)-4:]) != string(paypalPhone[len(paypalPhone)-4:]) {
+				newNumber = true
+			}
+		}
+		if len(pagbankPhone) > 1 {
+			if string(rappiPhone[len(rappiPhone)-4:]) != string(pagbankPhone[len(pagbankPhone)-4:]) {
+				newNumber = true
+			}
+		}
+		if len(mercadolivrePhone) > 1 {
+			if string(rappiPhone[len(rappiPhone)-4:]) != string(mercadolivrePhone[len(mercadolivrePhone)-4:]) {
+				newNumber = true
+			}
+		}
+		if len(rappiPhone) > 1 {
+			if string(rappiPhone[len(rappiPhone)-4:]) != string(mercadolivrePhone[len(mercadolivrePhone)-4:]) {
+				newNumber = true
+			}
+		}
+		if newNumber {
+			numberphoneBR[1][7] = string(uberPhone[len(uberPhone)-2])
+			numberphoneBR[1][8] = string(uberPhone[len(uberPhone)-1])
+			numberShow = showNumberPhoneBR(numberphoneBR)
+			PrintInfo(verde, "[+] Rappi, Possible Combination: "+numberShow)
+			possibleNumbers = append(possibleNumbers, numberShow)
+			numberShow = ""
+		}
+	}
 	existAccount.AccountMicrosoft(email)
 
 	if len(possibleNumbers) > 0 {

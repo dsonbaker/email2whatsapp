@@ -13,9 +13,10 @@ func Paypal(email string) string {
 	url := "https://www.paypal.com/authflow/password-recovery/?country.x=BR&locale.x=pt_BR&redirectUri=%252Fsignin"
 	var options []func(*chromedp.ExecAllocator)
 	options = []chromedp.ExecAllocatorOption{
-		chromedp.Flag("ignore-certificate-errors", "1"),
 		chromedp.Flag("headless", false), // set headless to false
 		chromedp.Flag("disable-gpu", true),
+		//
+		chromedp.UserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0"),
 	}
 	ctx, cancel := chromedp.NewContext(
 		context.Background(),

@@ -22,13 +22,14 @@ Inspired by Martin Vigo’s [email2phonenumber](https://github.com/martinvigo/em
 #### Leaked digits in the Brazilian version
 
 
-| **WebSites**          | **Leak Digits**  |
+| **WebSites**          | **Leak Digits**   |
 |---                    |---                |   
 | **Magalu**            | (01)9234*-****    |
 | **PayPal**            | (0*)9***1-2345    |
 | **PagBank**           | (0*)9****-1234    |
 | **Meli**              | (**)9****-1234    |
 | **Rappi**             | (**)9****-1234    |
+| **Uber**              | (**)9****-**12    |
 
 
 
@@ -58,9 +59,10 @@ go install -v github.com/dsonbaker/email2whatsapp@latest
     ```
 
 - Uses brute force to detect if it's the correct number (No need to solve a captcha).
-    > Microsoft returns the email initials.
+    > Microsoft and Uber returns the email initials.
     ```
     echo 5521912345678 | email2whatsapp -bruteforce microsoft
+    echo 5521912345678 | email2whatsapp -bruteforce uber
     ```
 ---
 ## Technique to detect if a WhatsApp number exists.
@@ -83,6 +85,8 @@ go install -v github.com/dsonbaker/email2whatsapp@latest
         - Google will only return if the number is linked to an account.
     - microsoft
         - Microsoft will return some characters of the email linked to the number.
+    - uber
+        - Uber will return some characters of the email linked to the number.
 > Note that some of these websites have captcha verification, thus requiring human assistance for captcha resolution. Therefore, the fewer the possibilities, the better the outcome.
 ---
 #### Disclaimer
